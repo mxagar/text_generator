@@ -4,3 +4,6 @@ literature/*.pdf
 .ipynb_checkpoints
 __pycache__
 workspace_utils.py
+preprocess.p
+models
+*.pt

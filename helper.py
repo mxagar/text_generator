@@ -24,7 +24,7 @@ def preprocess_and_save_data(dataset_path, token_lookup, create_lookup_tables):
     text = load_data(dataset_path)
     
     # Ignore notice, since we don't use it for analysing the data
-    text = text[81:]
+    # text = text[81:]
 
     token_dict = token_lookup()
     for key, token in token_dict.items():
@@ -52,4 +52,7 @@ def save_model(filename, decoder):
 
 def load_model(filename):
     save_filename = os.path.splitext(os.path.basename(filename))[0] + '.pt'
-    return torch.load(save_filename)
+    if torch.cuda.is_available():
+        return torch.load(save_filename)
+    else:
+        return torch.load(save_filename, map_location=torch.device('cpu'))

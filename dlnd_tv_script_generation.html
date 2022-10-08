@@ -15903,7 +15903,24 @@ Model Trained and Saved
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p><strong>Answer:</strong> (Write answer, here)</p>
+<p><strong>Answer:</strong></p>
+<ul>
+<li><code>sequence_length</code>: I have tried values between <code>10-20</code> and I didn't experience large changes.</li>
+<li><code>batch_size</code>: I have set the batch size large enough to take advantage of parallel computations, but not too big that we fall in local optima.</li>
+<li><code>num_epochs</code>: 10 epochs have been enough to go below the required loss of <code>3.5</code>.</li>
+<li><code>learning_rate</code>: the standard <code>0.001</code> has worked.</li>
+<li><code>vocab_size</code>: the number of unique tokens in the vocabulary.</li>
+<li><code>output_size</code>: the same as <code>vocab_size</code>, since we're trying to predict one-hot encoded tokens from the vocabulary.</li>
+<li><code>embedding_dim</code>: I used the standard values between <code>200-300</code>.</li>
+<li><code>hidden_dim</code>: after looking at similar examples (e.g., the Karpathy's character-level RNN), I have used a power of 2 around 200: <code>256</code>.</li>
+<li><code>n_layers</code>: the recommended values are between <code>1-3</code>; I have used the middle point, which seems to work. More layers yield more complex models (with more paramaters), which are expensive to train and can overfit.</li>
+</ul>
+<p>I have implemented a new extended training function which computes the loss with a validation split every epoch. Thanks to that function, we can see that the model overfits the train split. Some notes around that:</p>
+<ul>
+<li>To avoid overfitting, I added a dropout layer between the LSTM and the fully connected linear layer; however, the train loss increases considerably with large dropout probabilities. The current dropout value (0.1) allows low train losses, but the validation loss still increases with the number of epochs (so we are still overfitting).</li>
+<li>One could say that the train/validation split is not optimal: the vaidation split consists of the last 10% of the dataset, which corresponds to the last episodes of the TV show; that part is not necessarily representative of the series, i.e., the rest 90%.</li>
+<li>In the case of text generation, maybe we want to overfit: we want to generate text that resembles the training dataset.</li>
+</ul>
 
 </div>
 </div>

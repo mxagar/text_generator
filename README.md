@@ -64,7 +64,6 @@ Altogether, the project directory contains the following files and folders:
 
 ```
 .
-├── Instructions.md                     # Original Udacity instructions
 ├── README.md                           # This file
 ├── data/                               # Dataset folder
 │   └── Seinfeld_Scripts.txt            # Dataset: scripts
@@ -142,6 +141,8 @@ Particular challenge: understanding the sizes of all the vectors.
 
 - [My blog post on the project](https://mikelsagardia.io/blog/text-generation-rnn.html).
 - [My notes and code](https://github.com/mxagar/computer_vision_udacity) on the [Udacity Computer Vision Nanodegree](https://www.udacity.com/course/computer-vision-nanodegree--nd891).
+- My toy project on [sentiment analysis](https://github.com/mxagar/text_sentiment).
+- My toy project on [image captioning](https://github.com/mxagar/image_captioning).
 - [My notes and code](https://github.com/mxagar/deep_learning_udacity) on the [Udacity Deep Learning Nanodegree](https://www.udacity.com/course/deep-learning-nanodegree--nd101).
 
 Related interesting projects:

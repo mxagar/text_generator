@@ -2,7 +2,7 @@
 
 This repository contains a text generator which works with a Recurrent Neural Network (RNN) based on LSTM units. The [Seinfeld Chronicles Dataset from Kaggle](https://www.kaggle.com/datasets/thec03u5/seinfeld-chronicles) is used, which contains the complete scripts from the [Seinfield TV Show](https://en.wikipedia.org/wiki/Seinfeld).
 
-The project is a modification of the [Character-level RNN](https://github.com/karpathy/char-rnn) [implemented by Andrej Karpathy](http://karpathy.github.io/2015/05/21/rnn-effectiveness/). I have used materials from the [Udacity Computer Vision Nanodegree](https://www.udacity.com/course/computer-vision-nanodegree--nd891), which can be obtained in their original form in [project-tv-script-generation](https://github.com/mxagar/deep-learning-v2-pytorch/tree/master/project-tv-script-generation).
+The project is a modification of the [Character-level RNN](https://github.com/karpathy/char-rnn) [implemented by Andrej Karpathy](http://karpathy.github.io/2015/05/21/rnn-effectiveness/). I have used [Pytorch](https://pytorch.org/) and materials from the [Udacity Computer Vision Nanodegree](https://www.udacity.com/course/computer-vision-nanodegree--nd891), which can be obtained in their original form in [project-tv-script-generation](https://github.com/mxagar/deep-learning-v2-pytorch/tree/master/project-tv-script-generation).
 
 If you're interested in the topic, I recommend you to read [my blog post on it](https://mikelsagardia.io/blog/text-generation-rnn.html), where I introduce Recurrent Neural Network (RNN) based on LSTM units and their application to language modeling.
 
@@ -46,7 +46,7 @@ Table of Contents:
   - [How to Use This](#how-to-use-this)
     - [Overview of Files and Contents](#overview-of-files-and-contents)
     - [Dependencies](#dependencies)
-  - [Some Brief Notes on RNNs and Their Application to Language Modeling](#some-brief-notes-on-rnns-and-their-application-to-language-modeling)
+  - [Brief Notes on RNNs and Their Application to Language Modeling](#brief-notes-on-rnns-and-their-application-to-language-modeling)
   - [Practical Notes on the Text Generation Application](#practical-notes-on-the-text-generation-application)
   - [Improvements, Next Steps](#improvements-next-steps)
   - [Interesting Links](#interesting-links)
@@ -82,11 +82,11 @@ All in all, the following sections/tasks are implemented in the project notebook
 
 - The dataset is loaded and briefly explored.
 - The dataset is preprocessed: tokenization is performed, vocabulary dictionaries are created.
-- A parametrized data loader is defined which delivers batches of token sequences with their expected target token. Basically, if we have a sequence `X` of `N` tokens, the target `y` is the next token in the script; and all that is provided in batches of a desired size.
+- A parametrized data loader is defined which delivers batches of token sequences with their expected target token. Basically, if we have a sequence `X` of `N` tokens, the target `y` is the next token in the text; and all that is provided in batches of a desired size.
 - Definition of a RNN, which has:
   - An embedding layer.
   - An LSTM layer with parametrized layers within it.
-  - A fully connected layer.
+  - A fully connected layer, preceded with dropout.
 - Training of the network.
 - Generation of new scripts.
 
@@ -110,7 +110,7 @@ conda install pip
 pip install -r requirements.txt
 ```
 
-## Some Brief Notes on RNNs and Their Application to Language Modeling
+## Brief Notes on RNNs and Their Application to Language Modeling
 
 While [Convolutional Neural Networks (CNNs)](https://en.wikipedia.org/wiki/Convolutional_neural_network) are particularly good at capturing spatial relationships, [Recurrent Neural Networks (RNNs)](https://en.wikipedia.org/wiki/Recurrent_neural_network) model sequential structures very efficiently. Also, in recent years, the [Transformer](https://en.wikipedia.org/wiki/Transformer_(machine_learning_model)) architecture has been shown to work remarkably well with language data -- but let's keep it aside for this small toy project.
 
@@ -124,18 +124,17 @@ If you'd like to know more about how these steps, you should my [blog post](http
 
 ## Practical Notes on the Text Generation Application
 
-CONTENT.
+The notebook has many notes as Markdown text and code comments so that it is fairly understandable what is being done at each stage. In addition, consider these general comments:
 
-Particular challenge: understanding the sizes of all the vectors.
-
-- Batching sequences
-- Overall definition of RNNs with LSTM units: the sizes of the different vectors, and how to deal with their reshaping.
-- Hints on hyperparameter selection. [char-rnn](https://github.com/karpathy/char-rnn).
+- LSTM units are defined with `nn.LSTM` in Pytorch, and although they are called *units*, they are more like a layer than a neuron, akin to `nn.RNN`; its equivalent would be `nn.Linear`. Additionally, `nn.LSTM` can have several stacked layers inside.
+- We can pass one vector after the another in a loop. However, it's more efficient to pass a sequence of vectors together in a tensor. On top of a sequence, we can define batches of sequences. While sequences are usually defined by the application programmer, I'd advise to create batches automatically with the [Pytorch `DataLoader`](https://pytorch.org/docs/stable/data.html) API, as shown in the notebook.
+- When we input a sequence, we get as output a sequence of the same length; the output sequence is composed of hidden memory state vectors. The size of a hidden state vector doesn't need to be the same as the size of an input vector. This can be seen in the notebook, too; if you'd like more explanations, I encourage you to read [my blog post](https://mikelsagardia.io/blog/text-generation-rnn.html).
+- RNNs have many hyperparameters and it can be overwhelming to select the correct starting set. [Andrej Karpathy](http://karpathy.github.io/2015/05/21/rnn-effectiveness/) gives a great collection of hints in his project [char-rnn](https://github.com/karpathy/char-rnn), which I have followed.
 
 ## Improvements, Next Steps
 
 - [ ] Try different model weight initializations (e.g., for the embedding layer) to check if it is possible to improve model convergence.
-- [ ] Carry out hyperparameter tuning.
+- [ ] Carry out hyperparameter tuning, maybe with [skorch](https://skorch.readthedocs.io/en/stable/).
 
 ## Interesting Links
 
@@ -144,9 +143,6 @@ Particular challenge: understanding the sizes of all the vectors.
 - My toy project on [sentiment analysis](https://github.com/mxagar/text_sentiment).
 - My toy project on [image captioning](https://github.com/mxagar/image_captioning).
 - [My notes and code](https://github.com/mxagar/deep_learning_udacity) on the [Udacity Deep Learning Nanodegree](https://www.udacity.com/course/deep-learning-nanodegree--nd101).
-
-Related interesting projects:
-
 - [Character-level LSTM to generate text](https://github.com/mxagar/CVND_Exercises/blob/master/2_4_LSTMs/3_1.Chararacter-Level%20RNN%2C%20Exercise.ipynb), based on [a post by Andrej Karpathy](http://karpathy.github.io/2015/05/21/rnn-effectiveness/).
 - Generating Bach music: [DeepBach](https://arxiv.org/pdf/1612.01010.pdf).
 - Predicting seizures in intracranial EEG recordings: [American Epilepsy Society Seizure Prediction Challenge](https://www.kaggle.com/c/seizure-prediction).
